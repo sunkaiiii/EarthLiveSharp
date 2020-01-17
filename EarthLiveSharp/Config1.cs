@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EarthLiveSharp
 {
-    public static class Cfg
+    public static class Config
     {
+        //public static readonly Lazy<Config> instance = new Lazy<Config>(()=>new Config());
         public static string version;
         public static string satellite;
         public static string image_folder;
@@ -23,6 +25,10 @@ namespace EarthLiveSharp
         public static string saveDirectory;
         public static int saveMaxCount;
 
+        //private Config()
+        //{
+            
+        //}
         public static void Load()
         {
             try

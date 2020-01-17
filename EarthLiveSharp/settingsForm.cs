@@ -8,42 +8,42 @@ namespace EarthLiveSharp
         public settingsForm()
         {
             InitializeComponent();
-            Cfg.Load();
+            Config.Load();
         }
 
         private void save_config()
         {
-            Cfg.satellite = satellite.Text;
-            Cfg.interval = (int)(interval.Value);
-            Cfg.zoom = (int)(image_zoom.Value);
-            Cfg.autostart = autostart.Checked;
-            Cfg.setwallpaper = setwallpaper.Checked;
-            Cfg.saveTexture = Save_Texture.Checked;
-            Cfg.saveMaxCount = (int)Save_Max_Count.Value;
-            Cfg.saveDirectory = Directory_Display.Text;
+            Config.satellite = satellite.Text;
+            Config.interval = (int)(interval.Value);
+            Config.zoom = (int)(image_zoom.Value);
+            Config.autostart = autostart.Checked;
+            Config.setwallpaper = setwallpaper.Checked;
+            Config.saveTexture = Save_Texture.Checked;
+            Config.saveMaxCount = (int)Save_Max_Count.Value;
+            Config.saveDirectory = Directory_Display.Text;
 
             if (radioButton_CDN.Checked)
             {
-                Cfg.source_selection = 1;
-                Cfg.cloud_name = cloud_name.Text;
-                Cfg.api_key = api_key.Text;
-                Cfg.api_secret = api_secret.Text;
+                Config.source_selection = 1;
+                Config.cloud_name = cloud_name.Text;
+                Config.api_key = api_key.Text;
+                Config.api_secret = api_secret.Text;
             }
             else
             {
-                Cfg.source_selection = 0;
+                Config.source_selection = 0;
             }
             switch (image_size.SelectedIndex)
             {
-                case 0: Cfg.size = 1; break;
-                case 1: Cfg.size = 2; break;
-                case 2: Cfg.size = 4; break;
-                case 3: Cfg.size = 8; break;
-                case 4: Cfg.size = 16; break;
-                default: Cfg.size = 1; break;
+                case 0: Config.size = 1; break;
+                case 1: Config.size = 2; break;
+                case 2: Config.size = 4; break;
+                case 3: Config.size = 8; break;
+                case 4: Config.size = 16; break;
+                default: Config.size = 1; break;
             }
-            Cfg.Save();
-            Autostart.Set(Cfg.autostart);
+            Config.Save();
+            Autostart.Set(Config.autostart);
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -58,21 +58,21 @@ namespace EarthLiveSharp
 
         private void settingsForm_Load(object sender, EventArgs e)
         {
-            Cfg.Load();
-            version_number.Text = Cfg.version;
-            cloud_name.Text = Cfg.cloud_name;
-            autostart.Checked = Cfg.autostart;
-            setwallpaper.Checked = Cfg.setwallpaper;
-            interval.Value = Cfg.interval;
-            image_zoom.Value = Cfg.zoom;
-            api_key.Text = Cfg.api_key;
-            api_secret.Text = Cfg.api_secret;
-            Save_Texture.Checked = Cfg.saveTexture;
-            Save_Max_Count.Value = Cfg.saveMaxCount;
-            Directory_Display.Text = Cfg.saveDirectory;
+            Config.Load();
+            version_number.Text = Config.version;
+            cloud_name.Text = Config.cloud_name;
+            autostart.Checked = Config.autostart;
+            setwallpaper.Checked = Config.setwallpaper;
+            interval.Value = Config.interval;
+            image_zoom.Value = Config.zoom;
+            api_key.Text = Config.api_key;
+            api_secret.Text = Config.api_secret;
+            Save_Texture.Checked = Config.saveTexture;
+            Save_Max_Count.Value = Config.saveMaxCount;
+            Directory_Display.Text = Config.saveDirectory;
 
 
-            if (Cfg.source_selection == 1)
+            if (Config.source_selection == 1)
             {
                 radioButton_CDN.Checked = true;
                 panel2.Enabled = true;
@@ -83,7 +83,7 @@ namespace EarthLiveSharp
                 panel2.Enabled = false;
             }
 
-            if (Cfg.saveTexture)
+            if (Config.saveTexture)
             {
                 panel3.Enabled = true;
             }
@@ -92,14 +92,14 @@ namespace EarthLiveSharp
                 panel3.Enabled = false;
             }
 
-            switch (Cfg.satellite)
+            switch (Config.satellite)
             {
                 case "Himawari8": satellite.SelectedIndex = 0; image_size.Enabled = true; break;
                 case "FengYun4": satellite.SelectedIndex = 1; image_size.Enabled = false; break;
                 default: satellite.SelectedIndex = 0; image_size.Enabled = true; break;
             }
 
-            switch (Cfg.size)
+            switch (Config.size)
             {
                 case 1: image_size.SelectedIndex = 0; break;
                 case 2: image_size.SelectedIndex = 1; break;

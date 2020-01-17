@@ -34,13 +34,13 @@ namespace EarthLiveSharp
 
             try
             {
-                Cfg.Load();
+                Config.Load();
             }
             catch
             {
                 return;
             }
-            if (Cfg.source_selection ==0 & Cfg.cloud_name.Equals("demo"))
+            if (Config.source_selection ==0 & Config.cloud_name.Equals("demo"))
             {
                 #if DEBUG
 
@@ -52,9 +52,9 @@ namespace EarthLiveSharp
                 }
                 #endif
             }
-            Cfg.image_folder = Application.StartupPath + @"\images";
-            Cfg.Save();
-            Scrap_wrapper.set_scraper();
+            Config.image_folder = Application.StartupPath + @"\images";
+            Config.Save();
+            //Scrap_wrapper.set_scraper();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new mainForm());
@@ -129,9 +129,9 @@ namespace EarthLiveSharp
             WebClient client = new WebClient();
             string image_source = "";
             _source.Token.Register(client.CancelAsync);
-            if (Cfg.source_selection == 1)
+            if (Config.source_selection == 1)
             {
-               image_source = "http://res.cloudinary.com/" + Cfg.cloud_name + "/image/fetch/http://himawari8-dl.nict.go.jp/himawari8/img/D531106";
+               image_source = "http://res.cloudinary.com/" + Config.cloud_name + "/image/fetch/http://himawari8-dl.nict.go.jp/himawari8/img/D531106";
             }
             else
             {
@@ -139,12 +139,12 @@ namespace EarthLiveSharp
             }
             try
             {
-                for (int ii = 0; ii < Cfg.size; ii++)
+                for (int ii = 0; ii < Config.size; ii++)
                 {
-                    for (int jj = 0; jj < Cfg.size; jj++)
+                    for (int jj = 0; jj < Config.size; jj++)
                     {
-                        string url = string.Format("{0}/{1}d/550/{2}_{3}_{4}.png", image_source, Cfg.size, imageID, ii, jj);
-                        string image_path = string.Format("{0}\\{1}_{2}.png", Cfg.image_folder, ii, jj); // remove the '/' in imageID
+                        string url = string.Format("{0}/{1}d/550/{2}_{3}_{4}.png", image_source, Config.size, imageID, ii, jj);
+                        string image_path = string.Format("{0}\\{1}_{2}.png", Config.image_folder, ii, jj); // remove the '/' in imageID
                         await client.DownloadFileTaskAsync(url, image_path);
                     }
                 }
@@ -154,7 +154,7 @@ namespace EarthLiveSharp
             catch (Exception e)
             {
                 Trace.WriteLine(e.Message + " " + imageID);
-                Trace.WriteLine(string.Format("[image_folder]{0} [image_source]{1} [size]{2}",Cfg.image_folder, image_source, Cfg.size));
+                Trace.WriteLine(string.Format("[image_folder]{0} [image_source]{1} [size]{2}",Config.image_folder, image_source, Config.size));
                 return -1;
             }
         }
@@ -162,34 +162,34 @@ namespace EarthLiveSharp
         private void JoinImage()
         {
             // join & convert the images to wallpaper.bmp
-            Bitmap bitmap = new Bitmap(550 * Cfg.size, 550 * Cfg.size);
-            Image[,] tile = new Image[Cfg.size, Cfg.size];
+            Bitmap bitmap = new Bitmap(550 * Config.size, 550 * Config.size);
+            Image[,] tile = new Image[Config.size, Config.size];
             Graphics g = Graphics.FromImage(bitmap);
-            for (int ii = 0; ii < Cfg.size; ii++)
+            for (int ii = 0; ii < Config.size; ii++)
             {
-                for (int jj = 0; jj < Cfg.size; jj++)
+                for (int jj = 0; jj < Config.size; jj++)
                 {
-                    tile[ii,jj] = Image.FromFile(string.Format("{0}\\{1}_{2}.png", Cfg.image_folder, ii, jj));
+                    tile[ii,jj] = Image.FromFile(string.Format("{0}\\{1}_{2}.png", Config.image_folder, ii, jj));
                     g.DrawImage(tile[ii, jj], 550 * ii, 550 * jj);
                     tile[ii, jj].Dispose();
                 }
             }
             g.Save();
             g.Dispose();
-            if (Cfg.zoom == 100)
+            if (Config.zoom == 100)
             {
-                bitmap.Save(string.Format("{0}\\wallpaper.bmp", Cfg.image_folder),System.Drawing.Imaging.ImageFormat.Bmp);
+                bitmap.Save(string.Format("{0}\\wallpaper.bmp", Config.image_folder),System.Drawing.Imaging.ImageFormat.Bmp);
             }
-            else if (1 < Cfg.zoom & Cfg.zoom <100)
+            else if (1 < Config.zoom & Config.zoom <100)
             {
-                int new_size = bitmap.Height * Cfg.zoom /100;
+                int new_size = bitmap.Height * Config.zoom /100;
                 Bitmap zoom_bitmap = new Bitmap(new_size, new_size);
                 Graphics g_2 = Graphics.FromImage(zoom_bitmap);
                 g_2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 g_2.DrawImage(bitmap, 0, 0, new_size, new_size);
                 g_2.Save();
                 g_2.Dispose();
-                zoom_bitmap.Save(string.Format("{0}\\wallpaper.bmp", Cfg.image_folder),System.Drawing.Imaging.ImageFormat.Bmp);
+                zoom_bitmap.Save(string.Format("{0}\\wallpaper.bmp", Config.image_folder),System.Drawing.Imaging.ImageFormat.Bmp);
                 zoom_bitmap.Dispose();
             }
             else
@@ -199,15 +199,15 @@ namespace EarthLiveSharp
 
             bitmap.Dispose();
 
-            if (Cfg.saveTexture && Cfg.saveDirectory != "selected Directory")
+            if (Config.saveTexture && Config.saveDirectory != "selected Directory")
             {
-                if (Scrap_wrapper.SequenceCount >= Cfg.saveMaxCount)
+                if (Scrap_wrapper.SequenceCount >= Config.saveMaxCount)
                 {
                     Scrap_wrapper.SequenceCount = 0;
                 }
                 try
                 {
-                    File.Copy(string.Format("{0}\\wallpaper.bmp", Cfg.image_folder), Cfg.saveDirectory + "\\" + "wallpaper_" + Scrap_wrapper.SequenceCount + ".bmp", true);
+                    File.Copy(string.Format("{0}\\wallpaper.bmp", Config.image_folder), Config.saveDirectory + "\\" + "wallpaper_" + Scrap_wrapper.SequenceCount + ".bmp", true);
                     Scrap_wrapper.SequenceCount++;
                 }
                 catch (Exception e)
@@ -221,7 +221,7 @@ namespace EarthLiveSharp
 
         private void InitFolder()
         {
-            if(Directory.Exists(Cfg.image_folder))
+            if(Directory.Exists(Config.image_folder))
             {
                 // delete all images in the image folder.
                 //string[] files = Directory.GetFiles(image_folder);
@@ -233,7 +233,7 @@ namespace EarthLiveSharp
             else
             {
                 Trace.WriteLine("[himawari8 create folder]");
-                Directory.CreateDirectory(Cfg.image_folder);
+                Directory.CreateDirectory(Config.image_folder);
             }
         }
         public async Task UpdateImage(CancellationTokenSource _source)
@@ -254,17 +254,28 @@ namespace EarthLiveSharp
             last_imageID = imageID;
             return;
         }
-        public void CleanCDN()
+        public async void CleanCDN()
         {
-            Cfg.Load();
-            if (Cfg.api_key.Length == 0) return;
-            if (Cfg.api_secret.Length == 0) return;
+            Config.Load();
+            if (Config.api_key.Length == 0) return;
+            if (Config.api_secret.Length == 0) return;
             try
             {
-                HttpWebRequest request = WebRequest.Create("https://api.cloudinary.com/v1_1/" + Cfg.cloud_name + "/resources/image/fetch?prefix=http://himawari8-dl") as HttpWebRequest;
+                using(var client=new HttpClient())
+                {
+                    string url = "https://api.cloudinary.com/v1_1/" + Config.cloud_name + "/resources/image/fetch?prefix=http://himawari8-dl";
+                    string svcCredentials2 = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(Config.api_key + ":" + Config.api_secret));
+                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + svcCredentials2);
+                    var resp = await client.DeleteAsync(url);
+                    var resultString = resp.Content;
+                    Trace.WriteLine(resultString);
+                      
+                }
+
+                HttpWebRequest request = WebRequest.Create("https://api.cloudinary.com/v1_1/" + Config.cloud_name + "/resources/image/fetch?prefix=http://himawari8-dl") as HttpWebRequest;
                 request.Method = "DELETE";
                 request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
-                string svcCredentials = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(Cfg.api_key + ":" + Cfg.api_secret));
+                string svcCredentials = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(Config.api_key + ":" + Config.api_secret));
                 request.Headers.Add("Authorization", "Basic " + svcCredentials);
                 HttpWebResponse response = null;
                 StreamReader reader = null;

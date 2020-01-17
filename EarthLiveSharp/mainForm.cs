@@ -72,7 +72,7 @@ namespace EarthLiveSharp
         {
             Scrap_wrapper.ResetState();
             ChangeWidgetState();
-            timer1.Interval = Cfg.interval * 1000 * 60;
+            timer1.Interval = Config.interval * 1000 * 60;
             timer1.Start();
             _cancelSource = new CancellationTokenSource(); //send the cancelation token to the download service to support Cancelation task.
             if (!serviceRunning)
@@ -117,8 +117,9 @@ namespace EarthLiveSharp
             _cancelSource = new CancellationTokenSource();
             await Task.Delay(TimeSpan.FromSeconds(10)); // wait 10 secs for Internet reconnection after system resume.
             await Scrap_wrapper.UpdateImage(_cancelSource);
-            if (Cfg.setwallpaper)
-                Wallpaper.Set(Cfg.image_folder+"\\wallpaper.bmp");
+            if (
+                setwallpaper)
+                Wallpaper.Set(Config.image_folder+"\\wallpaper.bmp");
         }
 
         private void Form2_Deactivate(object sender, EventArgs e)
@@ -127,7 +128,7 @@ namespace EarthLiveSharp
             {
                 this.ShowInTaskbar = false;
                 this.Hide();
-                if (!Cfg.autostart)
+                if (!Config.autostart)
                 {
                     notifyIcon1.ShowBalloonTip(1000, "", "EarthLive# is running", ToolTipIcon.Warning);
                 }
@@ -145,7 +146,7 @@ namespace EarthLiveSharp
         private void mainForm_Load(object sender, EventArgs e)
         {
             button_stop.Enabled = false;
-            if (Cfg.autostart)
+            if (Config.autostart)
             {
                 button_start.PerformClick();
                 this.WindowState = FormWindowState.Minimized;
@@ -172,8 +173,8 @@ namespace EarthLiveSharp
         {
             await Scrap_wrapper.UpdateImage(_cancelSource);
             Wallpaper.SetDefaultStyle();
-            if (Cfg.setwallpaper)
-                Wallpaper.Set(Cfg.image_folder + "\\wallpaper.bmp");
+            if (Config.setwallpaper)
+                Wallpaper.Set(Config.image_folder + "\\wallpaper.bmp");
         }
 
         //checks if service running and changes context menu based on result.

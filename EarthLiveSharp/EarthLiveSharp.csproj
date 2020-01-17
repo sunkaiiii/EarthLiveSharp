@@ -63,7 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cfg.cs" />
+    <Compile Include="Config1.cs" />
+    <Compile Include="DownloadServiceHimawari8.cs" />
+    <Compile Include="Interfaces\IScraper.cs" />
+    <Compile Include="ScrapperFactory.cs" />
     <Compile Include="settingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
